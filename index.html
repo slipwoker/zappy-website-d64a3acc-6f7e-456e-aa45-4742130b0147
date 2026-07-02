@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>גריל ובר בשרי כשר עם נרגילות — נריו בר</title>
+    <meta name="description" content="חווית גריל ובר בשרי כשר סוערת: מנות בשר מטוגנות, המבורגרים עסיסיים ומגוון נרגילות בטעמים עשירים. אווירה תוססת עם אלכוהול ושתייה קלה. הזמינו שולחן עכשיו!">
+    <meta name="keywords" content="grill and bar, מסעדת בשרים כשרה, נרגילות, בר אלכוהול, bars near me">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'd64a3acc-6f7e-456e-aa45-4742130b0147',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        var clickMeta = {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        };
+        
+        trackEvent('click', clickMeta);
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        var navMeta = {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        };
+        
+        trackEvent('navigation', navMeta);
+      }
+    }, true);
+  }
+  
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="גריל ובר בשרי כשר עם נרגילות — נריו בר">
+    <meta property="og:description" content="חווית גריל ובר בשרי כשר סוערת: מנות בשר מטוגנות, המבורגרים עסיסיים ומגוון נרגילות בטעמים עשירים. אווירה תוססת עם אלכוהול ושתייה קלה. הזמינו שולחן עכשיו!">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="גריל ובר בשרי כשר עם נרגילות — נריו בר">
+    <meta name="twitter:description" content="חווית גריל ובר בשרי כשר סוערת: מנות בשר מטוגנות, המבורגרים עסיסיים ומגוון נרגילות בטעמים עשירים. אווירה תוססת עם אלכוהול ושתייה קלה. הזמינו שולחן עכשיו!">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .skip-link { position: absolute; top: 0; left: 0; transform: translateY(-200%); padding: 12px 18px; background: var(--bg-dark, #1a1a1a); color: var(--text-light, #fff); font-weight: 600; border-radius: 0 0 8px 0; z-index: 10000; }
+    .skip-link:focus { transform: none; outline: 2px solid var(--ring, #fff); outline-offset: 2px; }
+    :focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 3px; }
+  </style>
+
+
+  
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+    <script>window.ZAPPY_WEBSITE_ID = "d64a3acc-6f7e-456e-aa45-4742130b0147"; window.ZAPPY_API_BASE = "https://api.zappy5.com";</script>
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-light) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-light) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-light) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      html[dir="rtl"] .whatsapp-float { right: 20px !important; left: auto !important; }
+      html[dir="ltr"] .whatsapp-float, html:not([dir]) .whatsapp-float { left: 20px !important; right: auto !important; }
+      html[dir="rtl"] #mic-access-tool-general-button, html[dir="rtl"] .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="rtl"] ._access-icon { left: 20px !important; right: auto !important; }
+      html[dir="ltr"] #mic-access-tool-general-button, html[dir="ltr"] .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="ltr"] ._access-icon,
+      html:not([dir]) #mic-access-tool-general-button, html:not([dir]) .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool #mic-access-tool-general-button,
+      html:not([dir]) ._access-icon { right: 20px !important; left: auto !important; }
+      @media (max-width: 768px) { .whatsapp-float { display: flex !important; } }
+      @media (min-width: 769px) { .whatsapp-float { display: flex !important; } }
+      @media (max-width: 768px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+      @media (min-width: 769px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+    </style>
+</head>
+<body>
+<a class="skip-link" href="#main">דלג לתוכן הראשי</a>
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="תפריט">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+  
+  <button class="phone-header-btn" data-phone="[business_phone]" aria-label="התקשר">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-right-group"><div class="nav-brand">
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site---------image-1.webp" alt="נריו בר"></a>
+    </div><ul class="nav-menu" id="navMenu"><li><a href="/">דף הבית</a></li><li><a href="/menu">תפריט</a></li><li><a href="/hookahs-bar">נרגילות ובר</a></li><li><a href="/about">אודות</a></li><li class="mobile-contact-link nav-cta-mobile-item"><a href="/contact" class="nav-cta-btn">הזמנות ויצירת קשר</a></li></ul></div>
+    
+    
+    
+    <div class="nav-cta-container">
+      <a href="/contact" class="nav-cta-btn">הזמנות ויצירת קשר</a>
+    </div>
+  </div>
+</nav>
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .navbar,
+          nav.navbar {
+            min-height: 70px !important;
+          }
+
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            transform: none !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-light)) !important;
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+
+          html[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          body[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] header .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] nav .phone-header-btn {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '0', 'important');
+          mobileToggle.style.setProperty('bottom', '0', 'important');
+          mobileToggle.style.setProperty('margin-top', 'auto', 'important');
+          mobileToggle.style.setProperty('margin-bottom', 'auto', 'important');
+          mobileToggle.style.setProperty('transform', 'none', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '0', 'important');
+          phoneBtn.style.setProperty('bottom', '0', 'important');
+          phoneBtn.style.setProperty('margin-top', 'auto', 'important');
+          phoneBtn.style.setProperty('margin-bottom', 'auto', 'important');
+          phoneBtn.style.setProperty('transform', 'none', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu handler (shared by click and touchend)
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+      const closeIcon = newToggle.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        document.body.classList.remove('menu-open');
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        document.body.classList.add('menu-open');
+        console.log('[Navbar] Menu opened');
+      }
+    }
+    
+    // Use click for desktop/emulation and touchend as iOS Safari fallback.
+    // Prevent double-fire with a timestamp guard.
+    var lastToggleTime = 0;
+    function guardedToggle(e) {
+      var now = Date.now();
+      if (now - lastToggleTime < 300) return;
+      lastToggleTime = now;
+      handleToggle(e);
+    }
+    
+    newToggle.addEventListener('click', guardedToggle);
+    newToggle.addEventListener('touchend', guardedToggle);
+
+    // Close the full-screen overlay menu on Escape
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('active')) {
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        document.body.classList.remove('menu-open');
+        console.log('[Navbar] Menu closed (Escape)');
+      }
+    });
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        document.body.classList.remove('menu-open');
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // WhatsApp button visibility is now controlled via CSS (siteSettings).
+    // No JS-based desktop hiding — the button is visible on both mobile and desktop by default.
+  });
+})();
+
+</script>
+  
+  <main id="main">
+    <section data-band-index="0" class="index-hero-section" data-layout-spec="דף הבית-hero" data-hero-type="fullscreen-scrim">
+    <!-- Background Image -->
+    <img loading="eager" fetchpriority="high" data-hero-bg="true" data-placeholder="index-hero-image-1" data-context="Cinematic smoky kosher meat bar scene: a sizzling seared burger with melting cheese, glowing amber cocktail with smoke, and a hookah with cyan smoke wisps on a dark walnut table. Background is a dimly lit restaurant interior with warm flame highlights, neon magenta and cyan ambient haze, and elegant bar shelving. Shot from a low angle, shallow depth of field, premium cinematic lighting." width="1200" height="600" src="/assets/site-index-hero-image-1.webp" alt="נריו בר - אווירת בר בשרי כשר עם המבורגרים, קוקטיילים ונרגילות" class="hero-bg-image">
+
+    <!-- Scrim Overlay -->
+    <div class="hero-scrim" aria-hidden="true"></div>
+
+    <!-- Decorative Motifs -->
+    <div class="hero-decorations" aria-hidden="true">
+        <!-- Neon Smoke Wisps (Cyan) -->
+        <svg class="decor-smoke-wisps" viewBox="0 0 200 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100,600 Q80,500 120,420 T90,320 T130,220 T100,120 T140,20" fill="none" stroke="#00D4FF" stroke-width="2" opacity="0.15"/>
+            <path d="M60,600 Q40,480 80,400 T50,280 T90,180 T60,80 T100,0" fill="none" stroke="#00D4FF" stroke-width="1.5" opacity="0.1"/>
+            <path d="M140,600 Q160,520 120,440 T150,360 T110,260 T140,160 T120,60" fill="none" stroke="#00D4FF" stroke-width="2.5" opacity="0.08"/>
+        </svg>
+
+        <!-- Gold Crown Ornament -->
+        <svg class="decor-crown" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10,45 L10,30 L20,38 L30,20 L40,38 L50,30 L50,45 Z" fill="none" stroke="#C9A84C" stroke-width="2" opacity="0.8"/>
+            <circle cx="20" cy="38" r="2.5" fill="#FFD700" opacity="0.9"/>
+            <circle cx="30" cy="20" r="2.5" fill="#FFD700" opacity="0.9"/>
+            <circle cx="40" cy="38" r="2.5" fill="#FFD700" opacity="0.9"/>
+            <circle cx="10" cy="30" r="2" fill="#FFD700" opacity="0.9"/>
+            <circle cx="50" cy="30" r="2" fill="#FFD700" opacity="0.9"/>
+        </svg>
+
+        <!-- Pink Neon Glow Blob -->
+        <div class="decor-pink-blob" aria-hidden="true"></div>
+    </div>
+
+    <!-- Content Overlay Group -->
+    <div class="hero-content">
+        <h1 class="hero-title">נריו בר</h1>
+        <h3 class="hero-subtitle">מסעדת בשרים כשרה ובר עם נרגילות, קוקטיילים ואנרגיה של הלילה</h3>
+        <p class="hero-description">מנות בשר מטוגנות ונועזות, המבורגרים עסיסיים, נרגילות במגוון טעמים עשיר, אלכוהול משובח ושתייה קלה – כל החוויה במקום אחד, באווירה חברתית תוססת ובכשרות מהודרת. הזמינו שולחן עכשיו.</p>
+        <div class="hero-ctas">
+            <a href="#contact" class="btn-primary hero-btn">הזמנת מקום</a>
+            <a href="#menu" class="btn-secondary hero-btn">לתפריט שלנו</a>
+        </div>
+    </div>
+
+    <!-- Bottom Divider: Diagonal Clip Edge with Magenta Glow -->
+    <div class="hero-divider-wrapper" aria-hidden="true">
+        <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="magenta-glow" x="-10%" y="-10%" width="120%" height="120%">
+                    <feGaussianBlur stdDeviation="3" result="blur"/>
+                    <feMerge>
+                        <feMergeNode in="blur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            <path d="M0,80 L0,20 L1200,80 L1200,80 Z" fill="var(--bg-dark)"/>
+            <line x1="0" y1="20" x2="1200" y2="80" stroke="#FF2D95" stroke-width="2" filter="url(#magenta-glow)" opacity="0.7"/>
+        </svg>
+    </div>
+</section>
+
+<section data-band-index="1" class="index-features-section" data-layout-spec="דף הבית-features">
+    <div class="features-container">
+        <h2 class="features-title">החוויה שלנו</h2>
+        <p class="features-subtitle">בשרים מובחרים, קוקטיילים מנצחים ואווירה בלתי נשכחת</p>
+        
+        <div class="features-grid">
+            <!-- Card 1: Fried Meats - Taller -->
+            <article class="feature-card card-tall">
+                <div class="card-image-wrapper">
+                    <img loading="lazy" decoding="async" data-placeholder="index-features-image-1" data-context="Crispy kosher fried meat plate with golden-brown schnitzel, seasoned fries, and fresh herbs on a dark slate plate, dramatic lighting, side view close-up" width="600" height="480" src="/assets/site-index-features-image-1.webp" alt="צלחת בשרים מטוגנים פריכים">
+                    <div class="card-image-overlay"></div>
+                </div>
+                <div class="card-content">
+                    <div class="card-accent-line"></div>
+                    <h3 class="card-title">בשרים מטוגנים</h3>
+                    <p class="card-description">מנות בשר פריכות ועסיסיות בטיגון מושלם – שניצל, כנפיים וצ'יפס מתובל, הכל בהכשר מהודר וטריות ללא פשרות.</p>
+                </div>
+                <div class="card-glow-border"></div>
+            </article>
+
+            <!-- Card 2: Burgers -->
+            <article class="feature-card">
+                <div class="card-image-wrapper">
+                    <img loading="lazy" decoding="async" data-placeholder="index-features-image-2" data-context="Juicy gourmet kosher burger with melted cheese, caramelized onions, and bold toppings on a brioche bun, dark moody background, close-up shot" width="600" height="400" src="/assets/site-index-features-image-2.webp" alt="המבורגר עסיסי עם תוספות מושחתות">
+                    <div class="card-image-overlay"></div>
+                </div>
+                <div class="card-content">
+                    <div class="card-accent-line"></div>
+                    <h3 class="card-title">המבורגרים</h3>
+                    <p class="card-description">המבורגרים נוטפי עסיס עם תוספות נועזות – גבינות מובחרות, בצל מקורמל ורטבים סודיים שהופכים כל ביס לחגיגה.</p>
+                </div>
+                <div class="card-glow-border"></div>
+            </article>
+
+            <!-- Card 3: Hookahs -->
+            <article class="feature-card">
+                <div class="card-image-wrapper">
+                    <img loading="lazy" decoding="async" data-placeholder="index-features-image-3" data-context="Elegant glass hookah with glowing coals and swirling smoke in a dark lounge setting, cyan and magenta ambient lighting, luxurious atmosphere" width="600" height="400" src="/assets/site-index-features-image-3.webp" alt="נרגילה מעוצבת עם עשן מתערבל">
+                    <div class="card-image-overlay"></div>
+                </div>
+                <div class="card-content">
+                    <div class="card-accent-line"></div>
+                    <h3 class="card-title">נרגילות בטעמים</h3>
+                    <p class="card-description">מגוון רחב של נרגילות בטעמים עשירים – מפירות הדר מרעננים ועד תערובות אקזוטיות מעושנות, מוגשות בסטייל מושלם.</p>
+                </div>
+                <div class="card-glow-border"></div>
+            </article>
+
+            <!-- Card 4: Drinks - Wider -->
+            <article class="feature-card card-wide">
+                <div class="card-image-wrapper">
+                    <img loading="lazy" decoding="async" data-placeholder="index-features-image-4" data-context="Selection of premium alcoholic beverages and soft drinks on a dark bar counter, colorful cocktails with garnishes, bottles with golden reflections, cinematic lighting" width="600" height="400" src="/assets/site-index-features-image-4.webp" alt="מבחר משקאות אלכוהוליים וקלים">
+                    <div class="card-image-overlay"></div>
+                </div>
+                <div class="card-content">
+                    <div class="card-accent-line"></div>
+                    <h3 class="card-title">אלכוהול ושתייה</h3>
+                    <p class="card-description">בר עשיר עם אלכוהול איכותי, קוקטיילים ייחודיים ומשקאות קלים צוננים – השילוב המושלם לכל מנה ולאווירה.</p>
+                </div>
+                <div class="card-glow-border"></div>
+            </article>
+        </div>
+    </div>
+
+    <!-- Bottom Divider: Smoke Wave SVG -->
+    <div class="features-divider-wrapper">
+        <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="smokeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#3A3A40" stop-opacity="0.8"/>
+                    <stop offset="100%" stop-color="#F4EFE8" stop-opacity="1"/>
+                </linearGradient>
+            </defs>
+            <path d="M0,80 L0,45 Q80,30 160,42 T320,35 Q400,28 480,40 T640,32 Q720,38 800,36 T960,42 Q1040,30 1120,38 T1200,44 L1200,80 Z" fill="var(--bg-light)"/>
+        </svg>
+    </div>
+</section>
+
+<section data-band-index="2" class="index-showcase-section" data-layout-spec="דף הבית-showcase">
+  <div class="index-showcase-section__container">
+    <!-- Content Column (START/Right) -->
+    <div class="index-showcase-section__content">
+      <h2 class="index-showcase-section__title">החוויה של נריו בר</h2>
+      <p class="index-showcase-section__description">
+        מגיעים לארוחת ערב בשרית כשרה, נשארים לחגוג עם קוקטיילים ונשארים עד הלילה המאוחר עם נרגילות בטעמים עשירים. בין אם אתם מגיעים בזוג, עם חברים או לאירוע קבוצתי – נריו בר משלב אנרגיית בר תוססת עם החמימות של מסעדה ביתית.
+      </p>
+
+      <ul class="index-showcase-section__features">
+        <li class="index-showcase-section__feature-item">
+          <div class="index-showcase-section__feature-marker">
+            <span class="index-showcase-section__feature-number" style="color: #1A1A1A !important">01</span>
+            <svg class="index-showcase-section__feature-icon" data-element-type="icon" data-icon-type="svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="index-showcase-section__feature-text">
+            <h3 class="index-showcase-section__feature-title">מטבח בשרים כשר למהדרין</h3>
+            <p class="index-showcase-section__feature-desc">תפריט עשיר של בשרים מטוגנים, המבורגרים עסיסיים ומנות פתיחה מפנקות תחת פיקוח כשרות מלא.</p>
+          </div>
+        </li>
+
+        <li class="index-showcase-section__feature-item">
+          <div class="index-showcase-section__feature-marker">
+            <span class="index-showcase-section__feature-number" style="color: #1A1A1A !important">02</span>
+            <svg class="index-showcase-section__feature-icon" data-element-type="icon" data-icon-type="svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="index-showcase-section__feature-text">
+            <h3 class="index-showcase-section__feature-title">אנרגיית בר בלי לוותר על חמימות</h3>
+            <p class="index-showcase-section__feature-desc">מוזיקה טובה, אלכוהול משובח ונרגילות בטעמים מגוונים – באווירה שמאפשרת גם בילוי סוער וגם ערב שקט.</p>
+          </div>
+        </li>
+
+        <li class="index-showcase-section__feature-item">
+          <div class="index-showcase-section__feature-marker">
+            <span class="index-showcase-section__feature-number" style="color: #1A1A1A !important">03</span>
+            <svg class="index-showcase-section__feature-icon" data-element-type="icon" data-icon-type="svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="index-showcase-section__feature-text">
+            <h3 class="index-showcase-section__feature-title">הזמנת מקומות בקלות</h3>
+            <p class="index-showcase-section__feature-desc">שמרו לכם שולחן מראש בוואטסאפ או בטלפון – לקבוצות גדולות, ערב רומנטי או בילוי ספונטני עם החבר'ה.</p>
+          </div>
+        </li>
+      </ul>
+
+      <a href="#contact" class="index-showcase-section__cta btn-primary">
+        <span>הזמינו שולחן עכשיו</span>
+        <svg data-element-type="icon" data-icon-type="svg" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Image Column (END/Left) -->
+    <div class="index-showcase-section__media">
+      <div class="index-showcase-section__image-frame index-showcase-section__image-frame--main">
+        <img loading="lazy" decoding="async" data-placeholder="index-showcase-image-1" data-context="A premium kosher meat platter at Naryo Bar restaurant, featuring golden fried schnitzel, juicy burger with sesame bun, grilled meats, and vibrant garnishes on a dark slate plate, dramatic cinematic lighting with warm tones, shallow depth of field, editorial food photography style" width="600" height="400" src="/assets/site-index-showcase-image-1.webp" alt="צלחת בשרים מטוגנים ומנות דגל במסעדת נריו בר">
+      </div>
+      <div class="index-showcase-section__image-frame index-showcase-section__image-frame--secondary">
+        <img loading="lazy" decoding="async" data-placeholder="index-showcase-image-2" data-context="A stylish hookah setup at Naryo Bar with glowing coals and colorful flavored tobacco, surrounded by cocktail glasses and ambient neon lighting, cozy bar atmosphere, warm smoky ambiance, editorial nightlife photography" width="300" height="200" src="/assets/site-index-showcase-image-2.webp" alt="נרגילה מעוצבת וקוקטיילים באווירת הבר של נריו בר">
+      </div>
+      <!-- Decorative gold line detail -->
+      <div class="index-showcase-section__gold-line" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Divider: Torn-neon paper edge -->
+  <div class="index-showcase-section__divider-wrapper" aria-hidden="true" data-no-icon-edit="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Shadow layer -->
+      <path d="M0,80 L0,42 Q40,38 80,44 T160,40 Q200,44 240,38 T320,42 Q360,38 400,44 T480,40 Q520,44 560,38 T640,42 Q680,38 720,44 T800,40 Q840,44 880,38 T960,42 Q1000,38 1040,44 T1120,40 Q1160,44 1200,38 L1200,80 Z" fill="#0A0A0A"/>
+      <!-- Gold stroke layer -->
+      <path d="M0,80 L0,40 Q40,36 80,42 T160,38 Q200,42 240,36 T320,40 Q360,36 400,42 T480,38 Q520,42 560,36 T640,40 Q680,36 720,42 T800,38 Q840,42 880,36 T960,40 Q1000,36 1040,42 T1120,38 Q1160,42 1200,36 L1200,80 Z" fill="#0A0A0A" stroke="#C9A84C" stroke-width="2" opacity="0.6"/>
+      <!-- Main torn paper fill (off-white) -->
+      <path d="M0,80 L0,38 Q40,34 80,40 T160,36 Q200,40 240,34 T320,38 Q360,34 400,40 T480,36 Q520,40 560,34 T640,38 Q680,34 720,40 T800,36 Q840,40 880,34 T960,38 Q1000,34 1040,40 T1120,36 Q1160,40 1200,34 L1200,80 Z" fill="#0A0A0A"/>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="3" class="index-gallery-section" data-layout-spec="דף הבית-gallery" data-hero-type="gallery-dark">
+    <div class="index-gallery-section__container">
+        <h2 class="index-gallery-section__title">הגלריה של נריו</h2>
+        <div class="index-gallery-section__grid">
+            <div class="index-gallery-section__item index-gallery-section__item--large">
+                <img data-placeholder="index-gallery-image-1" data-context="A cinematic close-up of a juicy grilled burger with melting cheese, crispy fried onions, and a brioche bun, against a dark smoky bar background with warm golden lighting" width="600" height="400" src="/assets/site-index-gallery-image-1.webp" alt="המבורגר נריו מושלם" loading="lazy">
+                <span class="index-gallery-section__caption">המבורגרים</span>
+            </div>
+            <div class="index-gallery-section__item index-gallery-section__item--medium">
+                <img data-placeholder="index-gallery-image-2" data-context="A vibrant overhead shot of a hookah with glowing coals, thick aromatic smoke swirling, set on a dark reflective table with neon magenta and cyan ambient lights" width="400" height="400" src="/assets/site-index-gallery-image-2.webp" alt="נרגילה בטעמים עשירים" loading="lazy">
+                <span class="index-gallery-section__caption">נרגילות</span>
+            </div>
+            <div class="index-gallery-section__item index-gallery-section__item--narrow">
+                <img data-placeholder="index-gallery-image-3" data-context="A sleek cocktail glass with a bright magenta and gold layered drink, garnished with a sprig of rosemary, against a dark bar counter with bokeh lights" width="400" height="600" src="/assets/site-index-gallery-image-3.webp" alt="קוקטיילים מיוחדים" loading="lazy">
+                <span class="index-gallery-section__caption">קוקטיילים</span>
+            </div>
+            <div class="index-gallery-section__item index-gallery-section__item--narrow">
+                <img data-placeholder="index-gallery-image-4" data-context="A low-light atmospheric shot of a table set for two with flickering candlelight, a bottle of wine, and soft smoke wisps, capturing the intimate late-night bar vibe" width="400" height="600" src="/assets/site-index-gallery-image-4.webp" alt="אווירת ערב מאוחרת" loading="lazy">
+                <span class="index-gallery-section__caption">שולחן ערב</span>
+            </div>
+            <div class="index-gallery-section__item index-gallery-section__item--medium">
+                <img data-placeholder="index-gallery-image-5" data-context="A dramatic platter of crispy fried chicken and meat cuts, golden and glistening, served on a dark slate board with a side of dipping sauces and a cold beer" width="400" height="400" src="/assets/site-index-gallery-image-5.webp" alt="מנות בשר מטוגנות" loading="lazy">
+                <span class="index-gallery-section__caption">בשרים</span>
+            </div>
+            <div class="index-gallery-section__item index-gallery-section__item--large">
+                <img data-placeholder="index-gallery-image-6" data-context="An immersive wide-angle view of the Naryo Bar interior, showing plush velvet seating, neon signs, a fully stocked bar, and guests enjoying hookah and drinks in a lively atmosphere" width="600" height="400" src="/assets/site-index-gallery-image-6.webp" alt="חלל הבר התוסס" loading="lazy">
+                <span class="index-gallery-section__caption">האווירה</span>
+            </div>
+        </div>
+    </div>
+    <div class="index-gallery-section__divider-wrapper">
+        <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="dividerFade" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#151518" stop-opacity="0"/>
+                    <stop offset="100%" stop-color="#151518" stop-opacity="1"/>
+                </linearGradient>
+                <radialGradient id="fleck1" cx="30%" cy="50%" r="2%">
+                    <stop offset="0%" stop-color="#00D4FF" stop-opacity="0.6"/>
+                    <stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="fleck2" cx="70%" cy="40%" r="1.5%">
+                    <stop offset="0%" stop-color="#FF2D95" stop-opacity="0.5"/>
+                    <stop offset="100%" stop-color="#FF2D95" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="fleck3" cx="85%" cy="60%" r="1%">
+                    <stop offset="0%" stop-color="#00D4FF" stop-opacity="0.4"/>
+                    <stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+            <rect x="0" y="0" width="1200" height="80" fill="url(#dividerFade)"/>
+            <circle cx="360" cy="40" r="12" fill="url(#fleck1)"/>
+            <circle cx="840" cy="32" r="9" fill="url(#fleck2)"/>
+            <circle cx="1020" cy="48" r="6" fill="url(#fleck3)"/>
+        </svg>
+    </div>
+</section>
+
+<section data-band-index="4" class="index-cta-section" data-layout-spec="דף הבית-cta">
+  <div class="cta-container">
+    <div class="cta-glow-wrapper">
+      <div class="cta-neon-aura"></div>
+      <div class="cta-smoke-wisp cta-smoke-left"></div>
+      <div class="cta-smoke-wisp cta-smoke-right"></div>
+    </div>
+    <div class="cta-content">
+      <h2>הערב יוצאים לנריו בר</h2>
+      <p>הזמינו שולחן עכשיו לערב בלתי נשכח של בשרים כשרים, קוקטיילים מושחתים, נרגילות בטעמים עשירים ואווירה שאין כמוה. בין אם אתם זוג, קבוצת חברים, ערב עסקי או תיירים שמחפשים את הלב הפועם של העיר — אנחנו מחכים לכם.</p>
+      <div class="cta-actions">
+        <a href="/contact" class="cta-btn-primary">
+          <span>הזמינו שולחן עכשיו</span>
+          <svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/menu" class="cta-link-secondary">
+          <span>לצפייה בתפריט המלא</span>
+          <svg data-element-type="icon" data-icon-type="svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="cta-trust-badges">
+        <span class="cta-badge">כשרות מהדרין</span>
+        <span class="cta-badge">בר אלכוהול עשיר</span>
+        <span class="cta-badge">נרגילות 24 טעמים</span>
+      </div>
+    </div>
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer" dir="rtl">
+  <div class="footer-container">
+    <div class="footer-grid">
+      
+      <!-- Company Info -->
+      <div class="footer-col footer-company-col">
+        <img src="/assets/restaurant-bar-logo.webp" alt="נריו בר" class="logo">
+        <p class="footer-tagline">מסעדת שף, נרגילות ובר קוקטיילים – חוויה קולינרית לילית במיטבה.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-col footer-links-col">
+        <h4>ניווט מהיר</h4>
+        <ul class="footer-links">
+          <li><a href="/">דף הבית</a></li>
+          <li><a href="/menu">תפריט</a></li>
+          <li><a href="/hookahs-bar">נרגילות ובר</a></li>
+          <li><a href="/about">אודות</a></li>
+          <li><a href="/contact">הזמנות ויצירת קשר</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="footer-col footer-contact-col">
+        <h4>צרו קשר</h4>
+        <ul class="footer-contact">
+          <li>
+            <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+            <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span>
+          </li>
+          <li>
+            <span class="contact-icon"><i class="fas fa-phone"></i></span>
+            <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span>
+          </li>
+          <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+            <span class="contact-text">[business_address]</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Business Hours -->
+      <div class="footer-col footer-hours-col">
+        <h4>שעות פעילות</h4>
+        <ul class="footer-hours">
+          <li><a href="/"><span class="hours-day">ימים א'–ה'</span> <span class="hours-time">18:00–02:00</span></a></li>
+          <li><a href="/"><span class="hours-day">יום ו'</span> <span class="hours-time">18:00–01:00</span></a></li>
+          <li><a href="/"><span class="hours-day">שבת</span> <span class="hours-time">סגור</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Social Media -->
+      <div class="footer-col footer-social-col">
+        <h4>עקבו אחרינו</h4>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook" data-zappy-social-placeholder="true"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram" data-zappy-social-placeholder="true"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="WhatsApp" data-zappy-social-placeholder="true"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">
+        <span class="footer-copyright">© 2026 נריו בר. כל הזכויות שמורות.</span>
+      </div>
+      <div class="footer-bottom-right">
+        <nav class="footer-legal">
+          <a href="/privacy">מדיניות פרטיות</a>
+          <a href="/terms">תנאי שימוש</a>
+          <a href="/accessibility">נגישות</a>
+        </nav>
+        <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+
+    <script id="zappy-navbar-scroll-effect">
+    (function(){
+      var nb=document.querySelector('nav.navbar,.navbar:not(.zappy-catalog-menu)');
+      var cm=document.querySelector('.zappy-catalog-menu,#zappy-catalog-menu');
+      if(!nb)return;
+      var fb='rgba(244,239,232,0.85)';
+      var th=60;
+      var rs=getComputedStyle(document.documentElement);
+      var td=rs.getPropertyValue('--text-dark').trim()||'#1a1a1a';
+      var tl=rs.getPropertyValue('--text-light').trim()||'#ffffff';
+      var st=true?td:tl;
+      nb.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease,box-shadow 0.3s ease';
+      if(cm)cm.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease';
+      var neSel='a,.navbar-brand,.navbar-brand a,.dropdown-toggle,.mobile-toggle,.phone-header-btn,.mobile-hamburger-btn,.mobile-close-btn,.mobile-submenu-toggle,.nav-link';
+      var skipCls=['cart-link','login-link','nav-search-toggle','search-toggle'];
+      function sTC(c,clr){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){var sk=false;if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu')){sk=true;}for(var j=0;j<skipCls.length;j++){if(els[i].classList.contains(skipCls[j])){sk=true;break;}}if(!sk)els[i].style.setProperty('color',clr,'important');}}
+      function cTC(c){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu'))continue;els[i].style.removeProperty('color');}}
+      function applyScrolled(){
+        nb.classList.add('scrolled');
+        if(window.innerWidth>768){
+          nb.style.setProperty('--frosted-text',st);
+          nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('background-color',fb,'important');
+          nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+        }
+        if(cm){cm.classList.add('scrolled');if(window.innerWidth>768){cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}}
+      }
+      function onS(){
+        if(window._zappyNavNoDarkHero) return;
+        if(window.innerWidth<=768){nb.classList.remove('scrolled');cTC(nb);if(cm){cm.classList.remove('scrolled');cTC(cm);}return;}
+        var y=window.scrollY||window.pageYOffset;
+        if(y>th){
+          nb.classList.add('scrolled');nb.style.setProperty('background-color',fb,'important');nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('--frosted-text',st);nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+          if(cm){cm.classList.add('scrolled');cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}
+        }else{
+          nb.classList.remove('scrolled');nb.style.setProperty('background-color','transparent','important');nb.style.removeProperty('background-image');
+          nb.style.removeProperty('--frosted-text');nb.style.backdropFilter='none';nb.style.webkitBackdropFilter='none';nb.style.boxShadow='none';
+          cTC(nb);
+          if(cm){cm.classList.remove('scrolled');cm.style.setProperty('background','transparent','important');cm.style.setProperty('backdrop-filter','none','important');cm.style.setProperty('-webkit-backdrop-filter','none','important');cTC(cm);}
+        }
+      }
+      function sLum(rv,gv,bv){rv/=255;gv/=255;bv/=255;rv=rv<=0.03928?rv/12.92:Math.pow((rv+0.055)/1.055,2.4);gv=gv<=0.03928?gv/12.92:Math.pow((gv+0.055)/1.055,2.4);bv=bv<=0.03928?bv/12.92:Math.pow((bv+0.055)/1.055,2.4);return 0.2126*rv+0.7152*gv+0.0722*bv;}
+      window.addEventListener('scroll',onS,{passive:true});
+      window.addEventListener('resize',onS,{passive:true});
+      onS();
+      var heroEl=document.querySelector('section[class*="hero"],[data-hero-type],main:not(.courses-page-main)>section:first-child');
+      var hasDH=false;
+      if(heroEl){var hCs=getComputedStyle(heroEl);var hBI=hCs.backgroundImage;if(hBI&&hBI!=='none'){if(hBI.indexOf('url(')!==-1){var hM2=hCs.backgroundColor.match(/\d+/g);if(hM2&&hM2.length>=3){hasDH=sLum(parseInt(hM2[0]),parseInt(hM2[1]),parseInt(hM2[2]))<0.4;}else{hasDH=true;}}else if(hBI.indexOf('gradient')!==-1){var cM=hBI.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g);if(cM&&cM.length>0){var tLm=0;for(var ci=0;ci<cM.length;ci++){var pts=cM[ci].match(/\d+/g);tLm+=sLum(parseInt(pts[0]),parseInt(pts[1]),parseInt(pts[2]));}hasDH=(tLm/cM.length)<0.4;}else{hasDH=true;}}else{hasDH=true;}}else{var hM=hCs.backgroundColor.match(/\d+/g);if(hM&&hM.length>=3){hasDH=sLum(parseInt(hM[0]),parseInt(hM[1]),parseInt(hM[2]))<0.4;}}}
+      if(!hasDH){window.removeEventListener('scroll',onS);window.removeEventListener('resize',onS);applyScrolled();window._zappyNavNoDarkHero=true;}
+    })();
+    </script>
+</body>
+</html>
