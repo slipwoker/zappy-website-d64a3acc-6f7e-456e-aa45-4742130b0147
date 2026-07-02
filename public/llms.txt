@@ -7,41 +7,41 @@
 ## Pages
 
 ### דף הבית
-https://-d64a3acc.zappy5.app
+https://example.com
 חווית גריל ובר בשרי כשר סוערת: מנות בשר מטוגנות, המבורגרים עסיסיים ומגוון נרגילות בטעמים עשירים. אווירה תוססת עם אלכוהול ושתייה קלה. הזמינו שולחן עכשיו!
 
 ### תפריט
-https://-d64a3acc.zappy5.app/menu
+https://example.com/menu
 גלו תפריט גריל ובר בשרי כשר עם מנות פרימיום מטוגנות, המבורגרים מפנקים ותוספות ממכרות. בואו ליהנות מארוחה בלתי נשכחת באווירה מנצחת.
 
 ### נרגילות ובר
-https://-d64a3acc.zappy5.app/hookahs-bar
+https://example.com/hookahs-bar
 טבלו בבר נרגילות יוקרתי עם שפע טעמים, לצד תפריט אלכוהול מגוון ושתייה קלה. המקום המושלם לבילוי לילי סוחף – שמרו מקום עוד הלילה.
 
 ### אודות
-https://-d64a3acc.zappy5.app/about
+https://example.com/about
 נריו בר מגדיר מחדש בילוי בשרי כשר עם תשוקה לבשרים על האש, נרגילות מעולות ואווירת בר תוססת. הכירו את החזון שמאחורי המקום.
 
 ### הזמנות ויצירת קשר
-https://-d64a3acc.zappy5.app/contact
+https://example.com/contact
 רוצים לתפוס מקום? צרו קשר להזמנת שולחן בנריו בר – גריל ובר בשרי כשר עם נרגילות, אלכוהול ואווירה שאין שנייה לה. החברים כבר מחכים!
 
 ### תודה - נריו בר
-https://-d64a3acc.zappy5.app/thank-you
+https://example.com/thank-you
 נריו בר - תודה - נריו בר
 
 ## Legal & Policy
 
 ### Privacy Policy
-https://-d64a3acc.zappy5.app/privacy
+https://example.com/privacy
 Information about how user data is collected, stored, and protected.
 
 ### Terms & Conditions
-https://-d64a3acc.zappy5.app/terms
+https://example.com/terms
 Legal terms describing service usage, rights, and policies.
 
 ### Accessibility Statement
-https://-d64a3acc.zappy5.app/accessibility
+https://example.com/accessibility
 Information about WCAG compliance and accessibility features.
 
 ---
@@ -51,8 +51,8 @@ Information about WCAG compliance and accessibility features.
 - (No contact details configured yet.)
 
 ### Contact form
-- URL: https://-d64a3acc.zappy5.app/contact
-- Endpoint: https://-d64a3acc.zappy5.app/api/email/contact-form
+- URL: https://example.com/contact
+- Endpoint: https://example.com/api/email/contact-form
 - Method: POST
 - Content-Type: application/json
 - Fields:
@@ -84,6 +84,6 @@ Restaurant & Bar
 
 # Machine-readable feeds
 
-- Sitemap (XML): https://-d64a3acc.zappy5.app/sitemap.xml
-- Robots: https://-d64a3acc.zappy5.app/robots.txt
-- Flattened page text (for LLMs): https://-d64a3acc.zappy5.app/llms-full.txt
+- Sitemap (XML): https://example.com/sitemap.xml
+- Robots: https://example.com/robots.txt
+- Flattened page text (for LLMs): https://example.com/llms-full.txt
